@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freelance Rate Calculator - Find Your Perfect Hourly & Project Rates</title>
+    <meta name="description" content="Free freelance rate calculator. Calculate your ideal hourly rate, project rate, and retainer based on your income goals, expenses, and billable hours.">
+    <meta name="keywords" content="freelance rate calculator, hourly rate calculator, consulting rate, freelancer pricing, how much to charge">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 60px 0 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: -40px;
+            position: relative;
+            z-index: 2;
+            padding-bottom: 60px;
+        }
+        
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+        }
+        
+        .card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 32px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border);
+        }
+        
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card h2 .icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        
+        .form-group label span {
+            color: var(--text-light);
+            font-weight: 400;
+            font-size: 0.85rem;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-wrapper .prefix {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-weight: 600;
+        }
+        
+        .input-wrapper .suffix {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 0.85rem;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--card);
+            color: var(--text);
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+        }
+        
+        input.has-prefix { padding-left: 40px; }
+        input.has-suffix { padding-right: 50px; }
+        
+        .range-container {
+            margin-top: 8px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--border);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(99,102,241,0.4);
+            transition: transform 0.1s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+        
+        .range-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+        
+        .presets {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .preset-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            background: var(--card);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .preset-btn:hover, .preset-btn.active {
+            border-color: var(--primary);
+            background: rgba(99,102,241,0.08);
+            color: var(--primary);
+        }
+        
+        .result-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            border: 2px solid var(--secondary);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-box .label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .result-box .value {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin: 8px 0;
+        }
+        
+        .result-box .sub {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .result-item {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .result-item .label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        
+        .result-item .value {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .breakdown {
+            margin-top: 20px;
+        }
+        
+        .breakdown h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            color: var(--text);
+        }
+        
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+        
+        .breakdown-row:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--primary);
+        }
+        
+        .cta-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 2px solid var(--border);
+        }
+        
+        .cta-section h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .cta-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            width: 100%;
+        }
+        
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 14px rgba(99,102,241,0.4);
+        }
+        
+        .cta-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99,102,241,0.5);
+        }
+        
+        .cta-btn.secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+        
+        .cta-btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .cta-btn .tag {
+            font-size: 0.75rem;
+            background: rgba(255,255,255,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 4px;
+        }
+        
+        .share-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        
+        .share-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .info-box h4 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-box p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+        
+        .benchmarks {
+            margin-top: 20px;
+        }
+        
+        .benchmarks h3 {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+        
+        .benchmark-card {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .benchmark-card .role {
+            font-weight: 600;
+        }
+        
+        .benchmark-card .rate {
+            color: var(--primary);
+            font-weight: 700;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>💰 Freelance Rate Calculator</h1>
+            <p>Stop guessing what to charge. Calculate your exact hourly, project, and retainer rates based on your real financial goals.</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-grid">
+            <div class="card">
+                <h2><span class="icon">⚙️</span> Your Details</h2>
+                
+                <div class="form-group">
+                    <label>Quick Preset <span>(optional - auto-fills common values)</span></label>
+                    <div class="presets">
+                        <button class="preset-btn" onclick="applyPreset('webdev')">Web Developer</button>
+                        <button class="preset-btn" onclick="applyPreset('designer')">Designer</button>
+                        <button class="preset-btn" onclick="applyPreset('writer')">Writer</button>
+                        <button class="preset-btn" onclick="applyPreset('consultant')">Consultant</button>
+                        <button class="preset-btn" onclick="applyPreset('va')">Virtual Assistant</button>
+                        <button class="preset-btn" onclick="applyPreset('custom')">Custom</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="annualGoal">Annual Income Goal</label>
+                    <div class="input-wrapper">
+                        <span class="prefix">$</span>
+                        <input type="number" id="annualGoal" class="has-prefix" value="75000" min="0" step="1000" oninput="calculate()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="billableHours">Billable Hours per Week <span id="hoursDisplay">25 hrs</span></label>
+                    <div class="range-container">
+                        <input type="range" id="billableHours" min="5" max="60" value="25" oninput="updateHoursDisplay(); calculate()">
+                        <div class="range-labels">
+                            <span>5h</span>
+                            <span>20h</span>
+                            <span>40h</span>
+                            <span>60h</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="weeksOff">Weeks Off per Year <span>(vacation, holidays, sick days)</span></label>
+                    <div class="input-wrapper">
+                        <input type="number" id="weeksOff" value="6" min="0" max="12" step="1" oninput="calculate()">
+                        <span class="suffix">weeks</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expenses">Monthly Business Expenses <span>(software, tools, coworking, etc.)</span></label>
+                    <div class="input-wrapper">
+                        <span class="prefix">$</span>
+                        <input type="number" id="expenses" class="has-prefix" value="300" min="0" step="50" oninput="calculate()">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="taxRate">Estimated Tax Rate <span>(federal + state + self-employment)</span></label>
+                    <div class="input-wrapper">
+                        <input type="number" id="taxRate" value="30" min="0" max="50" step="1" oninput="calculate()">
+                        <span class="suffix">%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="buffer">Profit Buffer / Savings <span>(emergency fund, retirement, investments)</span></label>
+                    <div class="input-wrapper">
+                        <input type="number" id="buffer" value="15" min="0" max="40" step="1" oninput="calculate()">
+                        <span class="suffix">%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="icon">📊</span> Your Rates</h2>
+                
+                <div class="result-box">
+                    <div class="label">Your Minimum Hourly Rate</div>
+                    <div class="value" id="hourlyRate">$0</div>
+                    <div class="sub">This covers your income goal + expenses + taxes + savings</div>
+                </div>
+                
+                <div class="result-grid">
+                    <div class="result-item">
+                        <div class="label">Daily Rate (8h)</div>
+                        <div class="value" id="dailyRate">$0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Weekly Rate</div>
+                        <div class="value" id="weeklyRate">$0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Project Rate (20h)</div>
+                        <div class="value" id="projectRate">$0</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="label">Monthly Retainer</div>
+                        <div class="value" id="retainerRate">$0</div>
+                    </div>
+                </div>
+                
+                <div class="breakdown">
+                    <h3>💡 Rate Breakdown</h3>
+                    <div class="breakdown-row">
+                        <span>Base rate (income goal)</span>
+                        <span id="baseRate">$0/hr</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>+ Expenses coverage</span>
+                        <span id="expenseRate">$0/hr</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>+ Tax buffer</span>
+                        <span id="taxAmount">$0/hr</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>+ Profit/savings buffer</span>
+                        <span id="bufferAmount">$0/hr</span>
+                    </div>
+                    <div class="breakdown-row">
+                        <span>Your Rate</span>
+                        <span id="totalBreakdown">$0/hr</span>
+                    </div>
+                </div>
+                
+                <div class="info-box">
+                    <h4>💡 Pro Tip</h4>
+                    <p id="proTip">Charge 20-30% above your minimum rate to account for scope creep, difficult clients, and unpaid admin time. Your "walk away" rate is your minimum — your quoted rate should be higher.</p>
+                </div>
+                
+                <div class="benchmarks">
+                    <h3>📈 Industry Benchmarks (2026)</h3>
+                    <div class="benchmark-card">
+                        <span class="role">Web Developer</span>
+                        <span class="rate">$65-150/hr</span>
+                    </div>
+                    <div class="benchmark-card">
+                        <span class="role">UI/UX Designer</span>
+                        <span class="rate">$50-120/hr</span>
+                    </div>
+                    <div class="benchmark-card">
+                        <span class="role">Content Writer</span>
+                        <span class="rate">$30-100/hr</span>
+                    </div>
+                    <div class="benchmark-card">
+                        <span class="role">Marketing Consultant</span>
+                        <span class="rate">$75-200/hr</span>
+                    </div>
+                    <div class="benchmark-card">
+                        <span class="role">Virtual Assistant</span>
+                        <span class="rate">$15-40/hr</span>
+                    </div>
+                </div>
+                
+                <div class="cta-section">
+                    <h3>🚀 Ready to start earning?</h3>
+                    <div class="cta-buttons">
+                        <a href="https://www.freshbooks.com/?ref=freelanceratecalc" target="_blank" class="cta-btn primary">
+                            📄 Create Professional Invoices
+                            <span class="tag">Free Trial</span>
+                        </a>
+                        <a href="https://www.upwork.com/?ref=freelanceratecalc" target="_blank" class="cta-btn secondary">
+                            🔍 Find Freelance Clients on Upwork
+                        </a>
+                        <a href="https://toggl.com/track/?ref=freelanceratecalc" target="_blank" class="cta-btn secondary">
+                            ⏱️ Track Your Billable Hours
+                        </a>
+                        <a href="https://www.hellobonsai.com/?ref=freelanceratecalc" target="_blank" class="cta-btn secondary">
+                            📋 All-in-One Freelance Suite (Contracts, Proposals, Invoicing)
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="share-section">
+                    <button class="share-btn" onclick="shareResult()">
+                        📤 Share My Rate
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Freelance Rate Calculator — Built for freelancers who want to charge what they're worth.</p>
+            <p style="margin-top:8px; font-size:0.8rem;">This calculator provides estimates only. Consult a tax professional for advice specific to your situation.</p>
+        </div>
+    </footer>
+    
+    <div class="toast" id="toast">Copied to clipboard!</div>
+
+    <script>
+        const presets = {
+            webdev: { goal: 90000, hours: 30, weeks: 5, expenses: 400, tax: 32, buffer: 15 },
+            designer: { goal: 75000, hours: 28, weeks: 6, expenses: 250, tax: 30, buffer: 15 },
+            writer: { goal: 60000, hours: 25, weeks: 6, expenses: 150, tax: 28, buffer: 12 },
+            consultant: { goal: 120000, hours: 25, weeks: 8, expenses: 500, tax: 35, buffer: 20 },
+            va: { goal: 45000, hours: 35, weeks: 4, expenses: 100, tax: 25, buffer: 10 },
+            custom: { goal: 75000, hours: 25, weeks: 6, expenses: 300, tax: 30, buffer: 15 }
+        };
+        
+        function applyPreset(key) {
+            const p = presets[key];
+            document.getElementById('annualGoal').value = p.goal;
+            document.getElementById('billableHours').value = p.hours;
+            document.getElementById('weeksOff').value = p.weeks;
+            document.getElementById('expenses').value = p.expenses;
+            document.getElementById('taxRate').value = p.tax;
+            document.getElementById('buffer').value = p.buffer;
+            
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            updateHoursDisplay();
+            calculate();
+        }
+        
+        function updateHoursDisplay() {
+            const val = document.getElementById('billableHours').value;
+            document.getElementById('hoursDisplay').textContent = val + ' hrs';
+        }
+        
+        function formatCurrency(num) {
+            return '$' + Math.round(num).toLocaleString();
+        }
+        
+        function calculate() {
+            const annualGoal = parseFloat(document.getElementById('annualGoal').value) || 0;
+            const billableHours = parseFloat(document.getElementById('billableHours').value) || 0;
+            const weeksOff = parseFloat(document.getElementById('weeksOff').value) || 0;
+            const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+            const taxRate = parseFloat(document.getElementById('taxRate').value) || 0;
+            const buffer = parseFloat(document.getElementById('buffer').value) || 0;
+            
+            const workingWeeks = 52 - weeksOff;
+            const totalBillableHours = workingWeeks * billableHours;
+            const annualExpenses = expenses * 12;
+            
+            const netMultiplier = (1 - taxRate/100) * (1 - buffer/100);
+            const requiredPreTaxIncome = (annualGoal / netMultiplier) + annualExpenses;
+            
+            const hourlyRate = requiredPreTaxIncome / totalBillableHours;
+            const dailyRate = hourlyRate * 8;
+            const weeklyRate = hourlyRate * billableHours;
+            const projectRate = hourlyRate * 20;
+            const retainerRate = weeklyRate * 4.33;
+            
+            const baseRate = annualGoal / totalBillableHours;
+            const expenseRate = annualExpenses / totalBillableHours;
+            const taxAmount = (requiredPreTaxIncome - annualExpenses) * (taxRate/100) / totalBillableHours;
+            const bufferAmount = (requiredPreTaxIncome - annualExpenses) * (buffer/100) / totalBillableHours;
+            
+            document.getElementById('hourlyRate').textContent = formatCurrency(hourlyRate) + '/hr';
+            document.getElementById('dailyRate').textContent = formatCurrency(dailyRate);
+            document.getElementById('weeklyRate').textContent = formatCurrency(weeklyRate);
+            document.getElementById('projectRate').textContent = formatCurrency(projectRate);
+            document.getElementById('retainerRate').textContent = formatCurrency(retainerRate);
+            
+            document.getElementById('baseRate').textContent = formatCurrency(baseRate) + '/hr';
+            document.getElementById('expenseRate').textContent = formatCurrency(expenseRate) + '/hr';
+            document.getElementById('taxAmount').textContent = formatCurrency(taxAmount) + '/hr';
+            document.getElementById('bufferAmount').textContent = formatCurrency(bufferAmount) + '/hr';
+            document.getElementById('totalBreakdown').textContent = formatCurrency(hourlyRate) + '/hr';
+            
+            const premiumRate = hourlyRate * 1.25;
+            document.getElementById('proTip').textContent = 
+                `Charge ${formatCurrency(premiumRate)}/hr or higher when quoting clients. Your ${formatCurrency(hourlyRate)}/hr is your "walk away" minimum. Premium rates (${formatCurrency(premiumRate)}-${formatCurrency(hourlyRate * 1.5)}/hr) account for scope creep, difficult clients, and the 30-40% of time you spend on admin, marketing, and unpaid work.`;
+        }
+        
+        function shareResult() {
+            const rate = document.getElementById('hourlyRate').textContent;
+            const text = `I just calculated my freelance rate: ${rate}/hr 💰\\n\\nFind yours at: [YOUR-URL-HERE]`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Freelance Rate',
+                    text: text
+                });
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    const toast = document.getElementById('toast');
+                    toast.classList.add('show');
+                    setTimeout(() => toast.classList.remove('show'), 2500);
+                });
+            }
+        }
+        
+        updateHoursDisplay();
+        calculate();
+    </script>
+</body>
+</html>
